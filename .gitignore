@@ -1,0 +1,4 @@
+# Arquivos e pastas gerados pelo Visual Studio e pelo build
+.vs/
+bin/
+obj/
