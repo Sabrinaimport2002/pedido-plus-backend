@@ -14,17 +14,9 @@ namespace pedido_plus_backend.Dtos.User
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
         [Required]
-        [Compare("Email")]
-        public string ReEmail { get; set; }
-        [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
         [Required]
-        [Compare("Password")]
-        public string RePassword { get; set; }
-        [Required]
         public string Position { get; set; }
-        [Required]
-        public string Department { get; set; }
     }
 }

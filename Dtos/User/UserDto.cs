@@ -11,6 +11,5 @@ namespace pedido_plus_backend.Dtos.User
         public string? Name { get; set; }
         public string? Email { get; set; }
         public string? Position { get; set; }
-        public string? Department { get; set; }
     }
 }
