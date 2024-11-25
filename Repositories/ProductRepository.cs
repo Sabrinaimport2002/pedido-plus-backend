@@ -35,12 +35,18 @@ namespace pedido_plus_backend.Repositories
 
         public async Task<List<Product>> GetAll()
         {
-            return await _context.Products.ToListAsync();
+            return await _context.Products
+            .Include(p => p.Categories)
+            .ToListAsync();
         }
 
         public async Task<Product> GetById(int id)
         {
-            return await _context.Products.FindAsync(id);
+            var product = await _context.Products
+            .Include(p => p.Categories)
+            .FirstOrDefaultAsync(x => x.Id == id);
+
+            return product;
         }
 
         public async Task<Product> Update(Product product)

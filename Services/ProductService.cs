@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using pedido_plus_backend.Context;
 using pedido_plus_backend.Dtos.Product;
 using pedido_plus_backend.Models;
@@ -37,6 +38,19 @@ namespace pedido_plus_backend.Services
             if (_context.Products.Any(c => c.Name == productDto.Name))
                 throw new ApplicationException("Um produto com o mesmo nome já existe.");
 
+            // Associar categorias ao produto
+            if (productDto.CategoryIds != null && productDto.CategoryIds.Any())
+            {
+                var categories = await _context.Categories
+                    .Where(c => productDto.CategoryIds.Contains(c.Id))
+                    .ToListAsync();
+
+                if (categories.Count != productDto.CategoryIds.Count)
+                    throw new ApplicationException("Uma ou mais categorias não foram encontradas.");
+
+                product.Categories = categories;
+            }
+
             await _productRepository.Create(product);
         }
 
@@ -59,15 +73,27 @@ namespace pedido_plus_backend.Services
 
         public async Task UpdateProduct(CreateProductDto productDto)
         {
-            var product = _mapper.Map<Product>(productDto);
+            var product = await _productRepository.GetById(productDto.Id);
 
-            if (string.IsNullOrEmpty(productDto.Name) || productDto.Name.Length < 3)
-                throw new ApplicationException(
-                    "Nome do produto inválido. Não deve ser vazio e menor que 3 caracteres."
-                    );
+            if (product == null)
+                throw new ApplicationException("Produto não encontrado.");
 
-            if (_context.Products.Any(c => c.Name == productDto.Name && c.Id != productDto.Id))
-                throw new ApplicationException("Um produto com o mesmo nome já existe.");
+            product.Name = productDto.Name;
+            product.Price = productDto.Price;
+            product.Stock = productDto.Stock;
+
+            // Atualizar categorias
+            if (productDto.CategoryIds != null && productDto.CategoryIds.Any())
+            {
+                var categories = await _context.Categories
+                    .Where(c => productDto.CategoryIds.Contains(c.Id))
+                    .ToListAsync();
+
+                if (categories.Count != productDto.CategoryIds.Count)
+                    throw new ApplicationException("Uma ou mais categorias não foram encontradas.");
+
+                product.Categories = categories;
+            }
 
             await _productRepository.Update(product);
         }

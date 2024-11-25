@@ -14,9 +14,9 @@ namespace pedido_plus_backend.Dtos.Product
         [Required]
         public string Name { get; set; }
         [Required]
-        public string Category { get; set; }
-        [Required]
         public double Price { get; set; }
-        public int? Stock { get; set; }
+        public int Stock { get; set; }
+        [Required]
+        public List<int> CategoryIds { get; set; }
     }
 }

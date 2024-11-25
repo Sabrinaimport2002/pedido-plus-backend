@@ -12,9 +12,9 @@ namespace pedido_plus_backend.Profiles
     {
         public ProductProfile()
         {
-            CreateMap<ProductDto, Product>();
+            CreateMap<Product, ProductDto>()
+            .ForMember(dest => dest.Categories, opt => opt.MapFrom(src => src.Categories.Select(c => c.Name).ToList()));
             CreateMap<CreateProductDto, Product>();
-            CreateMap<Product, ProductDto>();
         }
     }
 }
