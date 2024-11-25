@@ -13,5 +13,6 @@ namespace pedido_plus_backend.Context
         public ContextDb(DbContextOptions<ContextDb> opts) : base(opts) { }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<Product> Products { get; set; }
     }
 }
